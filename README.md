@@ -19,7 +19,6 @@ $ ./app
 $ curl localhost:8080/ping
 ```
 
-
 ```bash
 $ GOOS=linux GOARCH=386 go build app.go
 $ docker build .
