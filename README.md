@@ -1,14 +1,16 @@
-- https://github.com/gin-gonic/gin
+# golang-gin-sample
+
+[gin](https://github.com/gin-gonic/gin) を利用したサンプルアプリを作成する。
+
+## 初期構築
 
 ```bash
 $ mkdir -p $GOPATH/src/github.com/pepese
 $ cd $GOPATH/src/github.com/pepese
-$ git clone https://github.com/pepese/golang-gin-sample.git
 $ cd golang-gin-sample
-$ echo "vendor/" > .gitignore
-$ dep init
+$ go mod init
 $ touch app.go
-$ dep ensure -v
+$ go mod tidy
 $ go run app.go
 $ curl localhost:8080/ping
 ```
