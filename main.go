@@ -1,5 +1,7 @@
 package main
 
+import "github.com/pepese/golang-gin-sample/app/infrastructure/server"
+
 // import "github.com/gin-gonic/gin"
 
 // func main() {
@@ -12,9 +14,7 @@ package main
 // 	r.Run() // listen and serve on 0.0.0.0:8080
 // }
 
-import "github.com/pepese/golang-gin-sample/infrastructure"
-
 func main() {
-	app := infrastructure.Server{}
-	app.Run()
+	srv := server.NewGinServer()
+	srv.Run()
 }
