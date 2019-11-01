@@ -4,20 +4,23 @@ package usecase
 PingUsecase interface contains Usecase methods.
 */
 type PingUsecase interface {
-	GET() string
+	Say()
 }
 
+/*
+PingUsecase model.
+*/
 type pingUsecase struct {
-	response string
+	Message string `json:"message"`
 }
 
-func (uc *pingUsecase) GET() string {
-	return uc.response
+func (uc *pingUsecase) Say(message string) {
+	uc.Message = message
 }
 
 /*
 NewPingUsecase returns *pingUsecase.
 */
 func NewPingUsecase() *pingUsecase {
-	return &pingUsecase{response: "pong"}
+	return &pingUsecase{}
 }

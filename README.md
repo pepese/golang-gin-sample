@@ -2,29 +2,23 @@
 
 [gin](https://github.com/gin-gonic/gin) を利用したサンプルアプリを作成する。
 
-## 初期構築
+## 実行
 
-```bash
-$ mkdir -p $GOPATH/src/github.com/pepese
-$ cd $GOPATH/src/github.com/pepese
-$ cd golang-gin-sample
-$ go mod init
-$ touch app.go
-$ go mod tidy
-$ go run app.go
-$ curl localhost:8080/ping
+```zsh
+% go mod tidy
+% go run main.go
+% curl localhost:8080/ping
 ```
 
-```bash
-$ go build app.go
-$ ./app
-$ curl localhost:8080/ping
+## Docker
+
+```zsh
+% docker build -t app .
+% docker run -d -p 8080:8080 --name app app
+% curl localhost:8080/ping
+% docker container stop app
 ```
 
-```bash
-$ GOOS=linux GOARCH=386 go build app.go
-$ docker build .
-$ docker images
-$ docker run -d -p 8080:8080 --name golang-gin xxxx
-$ curl localhost:8080/ping
-```
+## Docker Compose
+
+アプリをローカル実行する際の
