@@ -16,4 +16,11 @@ func NewGinRouter(e *gin.Engine) {
 		pingUc.Say("pong")
 		ctx.JSON(http.StatusOK, *pingUc)
 	})
+
+	user := router.Group("/users")
+	userUc := usecase.NewUserUsecase()
+	user.GET("", func(ctx *gin.Context) {
+		results := userUc.GetAll()
+		ctx.JSON(http.StatusOK, results)
+	})
 }
