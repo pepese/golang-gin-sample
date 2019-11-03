@@ -2,17 +2,17 @@ version: "3.2"
 services:
   mysql:
     image: mysql:5.7.26
+    ports:
+      - "3306:3306"
     container_name: mysql
     environment:
-      - "MYSQL_ALLOW_EMPTY_PASSWORD=yes"
-      - "MYSQL_DATABASE=domipos"
-      - "MYSQL_USER=admin"
-      - "MYSQL_PASSWORD=admin"
-      - 'TZ=Asia/Tokyo'
-    command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
-    volumes:
-      - ./docker/development/db/data:/var/lib/mysql
-      - ./docker/development/db/my.cnf:/etc/mysql/conf.d/my.cnf
-      - ./docker/development/db/sql:/docker-entrypoint-initdb.d
-    ports:
-      - "13306:3306"
+      - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+      - MYSQL_DATABASE=testdb
+      - MYSQL_USER=testuser
+      - MYSQL_PASSWORD=testpass
+      - TZ=Asia/Tokyo
+    # command: mysqld --character-set-server=utf8mb4 --collation-server=utf8mb4_unicode_ci
+    # volumes:
+    #   - ./docker/development/db/data:/var/lib/mysql
+    #   - ./docker/development/db/my.cnf:/etc/mysql/conf.d/my.cnf
+    #   - ./docker/development/db/sql:/docker-entrypoint-initdb.d
