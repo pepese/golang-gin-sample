@@ -5,9 +5,9 @@ import (
 )
 
 type UserRepository interface {
-	List(model *model.User) ([]model.User, error)
-	Get(model *model.User) (*model.User, error)
-	Create(model *model.User) error
-	Update(model *model.User) error
-	Delete(model *model.User) error
+	List(m *model.User) ([]model.User, error)
+	Get(m *model.User) (*model.User, error)
+	Create(m *model.User) (*model.User, error)
+	Update(m *model.User) (*model.User, error)
+	Delete(m *model.User) (*model.User, error)
 }

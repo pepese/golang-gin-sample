@@ -28,7 +28,19 @@ func TestGet(t *testing.T) {
 	if err != nil {
 		t.Fatalf("failed test %#v", err)
 	}
-	if *result != *user {
+	if (*result).FirstName != (*user).FirstName || (*result).LastName != (*user).LastName {
+		t.Fatal("failed test")
+	}
+}
+
+func TestList(t *testing.T) {
+	a := &model.User{ID: (*user).ID}
+	result, err := repo.List(a)
+	if err != nil {
+		t.Fatalf("failed test %#v", err)
+	}
+	element := result[0]
+	if element.FirstName != (*user).FirstName || element.LastName != (*user).LastName {
 		t.Fatal("failed test")
 	}
 }
