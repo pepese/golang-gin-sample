@@ -11,11 +11,17 @@ func (repo *userRepository) List(model *model.User) ([]model.User, error) {
 }
 
 func (repo *userRepository) Get(model *model.User) (*model.User, error) {
-	return nil, nil
+	if result := rdb.First(model, model); result.Error != nil {
+		return nil, result.Error
+	}
+	return model, nil
 }
 
-func (repo *userRepository) Create(model *model.User) error {
-	return nil
+func (repo *userRepository) Create(model *model.User) (*model.User, error) {
+	if result := rdb.Create(model); result.Error != nil {
+		return nil, result.Error
+	}
+	return model, nil
 }
 
 func (repo *userRepository) Update(model *model.User) error {

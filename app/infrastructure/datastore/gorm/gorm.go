@@ -6,14 +6,15 @@ import (
 	"github.com/pepese/golang-gin-sample/app/domain/model"
 )
 
+var rdb *gorm.DB
+
 func Init() {
 	db, err := gorm.Open("mysql", "testuser:testpass@tcp(127.0.0.1:3306)/testdb?charset=utf8mb4&parseTime=True&loc=Local")
 	if err != nil {
 		panic(err.Error())
 	}
-	defer db.Close()
+	// defer db.Close()
 
 	db.AutoMigrate(&model.User{})
-
-	// db.Create(&User{FirstName: "", LastName: ""})
+	rdb = db
 }

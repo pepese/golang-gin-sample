@@ -77,3 +77,9 @@ mysql> explain users;
 mysql> quit;
 /# exit
 ```
+
+## テスト
+
+```zsh
+% go test -v github.com/pepese/golang-gin-sample/...
+```
