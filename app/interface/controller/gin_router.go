@@ -8,7 +8,7 @@ import (
 )
 
 func NewGinRouter(e *gin.Engine) {
-	router := e.Group("")
+	router := e.Group("/api/v1")
 
 	ping := router.Group("/ping")
 	pingUc := usecase.NewPingUsecase()

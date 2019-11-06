@@ -3,6 +3,7 @@ package gorm
 import (
 	"testing"
 
+	"github.com/pepese/golang-gin-sample/app"
 	"github.com/pepese/golang-gin-sample/app/domain/model"
 )
 
@@ -10,6 +11,7 @@ var user *model.User
 var repo = NewUserRepository()
 
 func TestCreate(t *testing.T) {
+	app.InitConfig()
 	Init()
 	user = &model.User{FirstName: "testFirst", LastName: "testLast"}
 	result, err := repo.Create(user)

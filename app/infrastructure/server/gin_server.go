@@ -8,7 +8,10 @@ import (
 type ginServer struct{}
 
 func (hs *ginServer) Run() {
-	e := gin.Default()
+	e := gin.New()
+	e.Use(gin.Logger())
+	e.Use(gin.Recovery())
+
 	controller.NewGinRouter(e)
 	RunWithGracefulStop(e)
 }
