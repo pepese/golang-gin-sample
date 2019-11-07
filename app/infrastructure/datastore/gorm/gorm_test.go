@@ -24,6 +24,13 @@ func TestCreate(t *testing.T) {
 	user = result
 }
 
+func TestCreateSame(t *testing.T) {
+	result, err := repo.Create(user)
+	if result != nil && err == nil {
+		t.Fatalf("failed test %#v", err)
+	}
+}
+
 func TestGet(t *testing.T) {
 	a := &model.User{ID: (*user).ID}
 	result, err := repo.Get(a)

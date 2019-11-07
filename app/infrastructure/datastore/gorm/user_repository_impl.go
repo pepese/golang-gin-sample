@@ -25,6 +25,9 @@ func (repo *userRepository) Get(m *model.User) (*model.User, error) {
 	return searched, nil
 }
 
+/*
+primary key が重複した場合は nil, err が返却される（Error 1062: Duplicate entry '3' for key 'PRIMARY'）
+*/
 func (repo *userRepository) Create(m *model.User) (*model.User, error) {
 	if result := rdb.Create(m); result.Error != nil {
 		return nil, result.Error
