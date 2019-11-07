@@ -46,3 +46,29 @@ func TestList(t *testing.T) {
 		t.Fatal("failed test")
 	}
 }
+
+func TestUpdate(t *testing.T) {
+	a := &model.User{ID: (*user).ID, FirstName: "testFirst2"}
+	result, err := repo.Update(a)
+	if err != nil {
+		t.Fatalf("failed test %#v", err)
+	}
+	if (*result).FirstName != "testFirst2" {
+		t.Fatal("failed test")
+	}
+	user = result
+}
+
+func TestDelete(t *testing.T) {
+	result, err := repo.Delete(user)
+	if err != nil {
+		t.Fatalf("failed test %#v", err)
+	}
+	if *result != *user {
+		t.Fatal("failed test")
+	}
+	result, _ = repo.Get(user)
+	if result != nil {
+		t.Fatal("failed test")
+	}
+}
