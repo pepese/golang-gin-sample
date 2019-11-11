@@ -79,8 +79,67 @@ mysql> quit;
 /# exit
 ```
 
-## テスト
+## 単体テスト
 
 ```zsh
 % go test -v github.com/pepese/golang-gin-sample/...
+```
+
+## 単結合テスト
+
+```zsh
+% curl -X POST -H 'Content-Type:application/json' -d '{"first_name":"first","last_name":"last"}' localhost:8080/api/v1/users | jq .
+{
+  "id": 1,
+  "first_name": "first",
+  "last_name": "last",
+  "CreatedAt": "2019-11-11T18:55:04.015057+09:00",
+  "UpdatedAt": "2019-11-11T18:55:04.015057+09:00",
+  "DeletedAt": null
+}
+
+% curl localhost:8080/api/v1/users | jq .
+[
+  {
+    "id": 1,
+    "first_name": "first",
+    "last_name": "last",
+    "CreatedAt": "2019-11-11T18:55:04+09:00",
+    "UpdatedAt": "2019-11-11T18:55:04+09:00",
+    "DeletedAt": null
+  }
+]
+
+% curl -X PUT -H 'Content-Type:application/json' -d '{"first_name":"First","last_name":"Last"}' localhost:8080/api/v1/users/1 | jq .
+{
+  "id": 1,
+  "first_name": "First",
+  "last_name": "Last",
+  "CreatedAt": "0001-01-01T00:00:00Z",
+  "UpdatedAt": "2019-11-11T18:55:53.262974+09:00",
+  "DeletedAt": null
+}
+
+% curl localhost:8080/api/v1/users/1 | jq .
+{
+  "id": 1,
+  "first_name": "First",
+  "last_name": "Last",
+  "CreatedAt": "2019-11-11T18:55:04+09:00",
+  "UpdatedAt": "2019-11-11T18:55:53+09:00",
+  "DeletedAt": null
+}
+
+% curl -X DELETE localhost:8080/api/v1/users/1 | jq .
+{
+  "id": 1,
+  "first_name": "",
+  "last_name": "",
+  "CreatedAt": "0001-01-01T00:00:00Z",
+  "UpdatedAt": "0001-01-01T00:00:00Z",
+  "DeletedAt": null
+}
+
+% curl localhost:8080/api/v1/users | jq .
+[]
 ```
