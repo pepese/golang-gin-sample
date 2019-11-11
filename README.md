@@ -82,7 +82,11 @@ mysql> quit;
 ## 単体テスト
 
 ```zsh
-% go test -v github.com/pepese/golang-gin-sample/...
+% go test -v -cover github.com/pepese/golang-gin-sample/...
+
+% go test -coverprofile=./coverage/cover.out github.com/pepese/golang-gin-sample/...
+% go tool cover -html=./coverage/cover.out -o ./coverage/cover.html
+% open ./coverage/cover.html
 ```
 
 ## 単結合テスト
