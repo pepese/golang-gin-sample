@@ -6,7 +6,7 @@ import (
 
 type userRepository struct{}
 
-func (repo *userRepository) List(m *model.User) ([]model.User, error) {
+func (repo *userRepository) List(m *model.User) (model.Users, error) {
 	searched := []model.User{}
 	if result := rdb.Find(&searched, m); result.Error != nil {
 		return nil, result.Error
@@ -36,7 +36,7 @@ func (repo *userRepository) Create(m *model.User) (*model.User, error) {
 }
 
 func (repo *userRepository) Update(m *model.User) (*model.User, error) {
-	if result := rdb.Save(m); result.Error != nil {
+	if result := rdb.Omit("created_at").Save(m); result.Error != nil {
 		return nil, result.Error
 	}
 	return m, nil
