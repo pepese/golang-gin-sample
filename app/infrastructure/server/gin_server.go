@@ -5,17 +5,18 @@ import (
 	"github.com/pepese/golang-gin-sample/app/interface/controller"
 )
 
-type ginServer struct{}
+var ginServer *gin.Engine
 
-func (hs *ginServer) Run() {
+func GinServerRun() {
+	RunWithGracefulStop(ginServer)
+}
+
+func NewGinServer() *gin.Engine {
 	e := gin.New()
 	e.Use(gin.Logger())
 	e.Use(gin.Recovery())
-
 	controller.NewGinRouter(e)
-	RunWithGracefulStop(e)
-}
+	ginServer = e
 
-func NewGinServer() *ginServer {
-	return &ginServer{}
+	return e
 }

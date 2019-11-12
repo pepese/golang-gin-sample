@@ -12,6 +12,6 @@ func main() {
 	db := gorm.Init()
 	defer db.Close()
 
-	srv := server.NewGinServer()
-	srv.Run()
+	server.NewGinServer()
+	server.GinServerRun()
 }
