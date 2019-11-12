@@ -30,7 +30,16 @@ func TestInit(t *testing.T) {
 
 var tmpUser *model.User
 
-func TestPostUsers(t *testing.T) {
+func TestGetUsersEmpty(t *testing.T) {
+	req, _ := http.NewRequest("GET", "/api/v1/users", nil)
+
+	res := httptest.NewRecorder()
+	testRouter.ServeHTTP(res, req)
+	assert.Equal(t, res.Code, 200)
+	assert.Equal(t, getBodyString(res), "[]")
+}
+
+func TestPostUsersOK(t *testing.T) {
 	req, _ := http.NewRequest("POST", "/api/v1/users", strings.NewReader(`
 	{
 		"first_name": "First",
@@ -44,7 +53,7 @@ func TestPostUsers(t *testing.T) {
 	tmpUser = getStruct(&model.User{}, res).(*model.User)
 }
 
-func TestGetUser(t *testing.T) {
+func TestGetUserOK(t *testing.T) {
 	req, _ := http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
 
 	res := httptest.NewRecorder()
@@ -55,7 +64,7 @@ func TestGetUser(t *testing.T) {
 	assert.Equal(t, (*resUser).LastName, (*tmpUser).LastName)
 }
 
-func TestPutUser(t *testing.T) {
+func TestPutUserOK(t *testing.T) {
 	req, _ := http.NewRequest("PUT", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), strings.NewReader(`
 	{
 		"first_name": "FirstX",
@@ -81,7 +90,7 @@ func TestPutUser(t *testing.T) {
 	assert.Equal(t, (*resUser).LastName, (*tmpUser).LastName)
 }
 
-func TestDeleteUser(t *testing.T) {
+func TestDeleteUserOK(t *testing.T) {
 	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
 
 	res := httptest.NewRecorder()
