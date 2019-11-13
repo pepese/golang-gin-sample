@@ -9,103 +9,100 @@ import (
 	"strings"
 	"testing"
 
-	"github.com/gin-gonic/gin"
 	"github.com/pepese/golang-gin-sample/app"
 	"github.com/pepese/golang-gin-sample/app/domain/model"
 	"github.com/pepese/golang-gin-sample/app/infrastructure/datastore/gorm"
 	"gopkg.in/go-playground/assert.v1"
 )
 
-var testRouter *gin.Engine
+////////////////////////////////////////////////////////////////////////
+// TEST /api/v1/users
+////////////////////////////////////////////////////////////////////////
 
-func TestInit(t *testing.T) {
+func TestUsersAPI(t *testing.T) {
 	app.InitConfig()
-	gorm.Init()
-	testRouter = NewGinServer()
-}
+	rdb := gorm.Init()
+	defer rdb.Close()
+	testRouter := NewGinServer()
+	var tmpUser *model.User
 
-////////////////////////////////////////////////////////////////////////
-// TEST /api/v1/companies
-////////////////////////////////////////////////////////////////////////
+	t.Run("Get empty users", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", "/api/v1/users", nil)
 
-var tmpUser *model.User
+		res := httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		assert.Equal(t, getBodyString(res), "[]")
+	})
 
-func TestGetUsersEmpty(t *testing.T) {
-	req, _ := http.NewRequest("GET", "/api/v1/users", nil)
+	t.Run("Post user", func(t *testing.T) {
+		req, _ := http.NewRequest("POST", "/api/v1/users", strings.NewReader(`
+		{
+			"first_name": "First",
+			"last_name": "Last"
+		}`))
+		req.Header.Set("Content-Type", "application/json")
 
-	res := httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	assert.Equal(t, getBodyString(res), "[]")
-}
+		res := httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		tmpUser = getStruct(&model.User{}, res).(*model.User)
+	})
 
-func TestPostUsersOK(t *testing.T) {
-	req, _ := http.NewRequest("POST", "/api/v1/users", strings.NewReader(`
-	{
-		"first_name": "First",
-		"last_name": "Last"
-	}`))
-	req.Header.Set("Content-Type", "application/json")
+	t.Run("Get user", func(t *testing.T) {
+		req, _ := http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
 
-	res := httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	tmpUser = getStruct(&model.User{}, res).(*model.User)
-}
+		res := httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		resUser := getStruct(&model.User{}, res).(*model.User)
+		assert.Equal(t, (*resUser).FirstName, (*tmpUser).FirstName)
+		assert.Equal(t, (*resUser).LastName, (*tmpUser).LastName)
+	})
 
-func TestGetUserOK(t *testing.T) {
-	req, _ := http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
+	t.Run("Put user", func(t *testing.T) {
+		req, _ := http.NewRequest("PUT", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), strings.NewReader(`
+		{
+			"first_name": "FirstX",
+			"last_name": "LastX"
+		}`))
+		req.Header.Set("Content-Type", "application/json")
 
-	res := httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	resUser := getStruct(&model.User{}, res).(*model.User)
-	assert.Equal(t, (*resUser).FirstName, (*tmpUser).FirstName)
-	assert.Equal(t, (*resUser).LastName, (*tmpUser).LastName)
-}
+		res := httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		resUser := getStruct(&model.User{}, res).(*model.User)
+		assert.Equal(t, (*resUser).FirstName, "FirstX")
+		assert.Equal(t, (*resUser).LastName, "LastX")
+		tmpUser = resUser
 
-func TestPutUserOK(t *testing.T) {
-	req, _ := http.NewRequest("PUT", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), strings.NewReader(`
-	{
-		"first_name": "FirstX",
-		"last_name": "LastX"
-	}`))
-	req.Header.Set("Content-Type", "application/json")
+		req, _ = http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
 
-	res := httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	resUser := getStruct(&model.User{}, res).(*model.User)
-	assert.Equal(t, (*resUser).FirstName, "FirstX")
-	assert.Equal(t, (*resUser).LastName, "LastX")
-	tmpUser = resUser
+		res = httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		resUser = getStruct(&model.User{}, res).(*model.User)
+		assert.Equal(t, (*resUser).FirstName, (*tmpUser).FirstName)
+		assert.Equal(t, (*resUser).LastName, (*tmpUser).LastName)
+	})
 
-	req, _ = http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
+	t.Run("Create user", func(t *testing.T) {
+		req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
 
-	res = httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	resUser = getStruct(&model.User{}, res).(*model.User)
-	assert.Equal(t, (*resUser).FirstName, (*tmpUser).FirstName)
-	assert.Equal(t, (*resUser).LastName, (*tmpUser).LastName)
-}
+		res := httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		resUser := getStruct(&model.User{}, res).(*model.User)
+		assert.Equal(t, (*resUser).FirstName, "")
+		assert.Equal(t, (*resUser).LastName, "")
 
-func TestDeleteUserOK(t *testing.T) {
-	req, _ := http.NewRequest("DELETE", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
+		req, _ = http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
 
-	res := httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	resUser := getStruct(&model.User{}, res).(*model.User)
-	assert.Equal(t, (*resUser).FirstName, "")
-	assert.Equal(t, (*resUser).LastName, "")
-
-	req, _ = http.NewRequest("GET", fmt.Sprintf("/api/v1/users/%d", tmpUser.ID), nil)
-
-	res = httptest.NewRecorder()
-	testRouter.ServeHTTP(res, req)
-	assert.Equal(t, res.Code, 200)
-	assert.Equal(t, getBodyString(res), "null")
+		res = httptest.NewRecorder()
+		testRouter.ServeHTTP(res, req)
+		assert.Equal(t, res.Code, 200)
+		assert.Equal(t, getBodyString(res), "null")
+	})
 }
 
 ////////////////////////////////////////////////////////////////////////
