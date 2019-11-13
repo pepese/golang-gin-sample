@@ -16,44 +16,39 @@ UserUsecase interface.
 /*
 UserUsecase mode.
 */
-type UserUsecase struct {
+type UserUsecase struct{}
+
+var userRepository presenter.UserRepository
+
+func (UserUsecase) Init() {
+	userRepository = db.NewUserRepository()
 }
 
 /*
 List func is UserUsecase implement.
 */
 func (UserUsecase) List(m *model.User) model.Users {
-	var r presenter.UserRepository
-	r = db.NewUserRepository()
-	result, _ := r.List(m)
+	result, _ := userRepository.List(m)
 	return result
 }
 
 func (UserUsecase) Get(m *model.User) *model.User {
-	var r presenter.UserRepository
-	r = db.NewUserRepository()
-	result, _ := r.Get(m)
+	result, _ := userRepository.Get(m)
 	return result
 }
 
 func (UserUsecase) Create(m *model.User) *model.User {
-	var r presenter.UserRepository
-	r = db.NewUserRepository()
-	result, _ := r.Create(m)
+	result, _ := userRepository.Create(m)
 	return result
 }
 
 func (UserUsecase) Update(m *model.User) *model.User {
-	var r presenter.UserRepository
-	r = db.NewUserRepository()
-	result, _ := r.Update(m)
+	result, _ := userRepository.Update(m)
 	return result
 }
 
 func (UserUsecase) Delete(m *model.User) *model.User {
-	var r presenter.UserRepository
-	r = db.NewUserRepository()
-	result, _ := r.Delete(m)
+	result, _ := userRepository.Delete(m)
 	return result
 }
 

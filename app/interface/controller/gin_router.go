@@ -22,6 +22,7 @@ func NewGinRouter(e *gin.Engine) {
 	user := router.Group("/users")
 	userUc := usecase.UserUsecase{}
 	{
+		userUc.Init()
 		// GET /api/v1/users
 		user.GET("", func(c *gin.Context) {
 			m := model.User{}
