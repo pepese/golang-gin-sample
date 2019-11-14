@@ -7,6 +7,8 @@ import (
 )
 
 type Config struct {
+	AppName     string `envconfig:"APP_NAME" default:"pos-api"`
+	AppVersion  string `envconfig:"APP_VERSION" default:"undefined"`
 	RdbType     string `envconfig:"RDB_TYPE" default:"mysql"`
 	RdbUser     string `envconfig:"RDB_USER" default:"testuser"`
 	RdbPassword string `envconfig:"RDB_PASSWORD" default:"testpass"`
@@ -19,6 +21,7 @@ var config *Config
 var once sync.Once
 
 func GetConfig() *Config {
+	InitConfig()
 	return config
 }
 
