@@ -8,7 +8,9 @@ import (
 	"go.uber.org/zap/zapcore"
 )
 
-const loggerKey = int(1)
+type key int
+
+const loggerKey = key(1)
 
 var (
 	desugaredLogger     *zap.Logger

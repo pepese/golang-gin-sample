@@ -1,6 +1,9 @@
 package usecase
 
 import (
+	"context"
+
+	"github.com/pepese/golang-gin-sample/app"
 	"github.com/pepese/golang-gin-sample/app/domain/model"
 	db "github.com/pepese/golang-gin-sample/app/infrastructure/datastore/gorm"
 	"github.com/pepese/golang-gin-sample/app/interface/presenter"
@@ -27,28 +30,48 @@ func (UserUsecase) Init() {
 /*
 List func is UserUsecase implement.
 */
-func (UserUsecase) List(m *model.User) model.Users {
-	result, _ := userRepository.List(m)
+func (UserUsecase) List(c context.Context, m *model.User) model.Users {
+	logger := app.GetLoggerFromContext(c)
+	result, err := userRepository.List(m)
+	if err != nil {
+		logger.Error(err)
+	}
 	return result
 }
 
-func (UserUsecase) Get(m *model.User) *model.User {
-	result, _ := userRepository.Get(m)
+func (UserUsecase) Get(c context.Context, m *model.User) *model.User {
+	logger := app.GetLoggerFromContext(c)
+	result, err := userRepository.Get(m)
+	if err != nil {
+		logger.Error(err)
+	}
 	return result
 }
 
-func (UserUsecase) Create(m *model.User) *model.User {
-	result, _ := userRepository.Create(m)
+func (UserUsecase) Create(c context.Context, m *model.User) *model.User {
+	logger := app.GetLoggerFromContext(c)
+	result, err := userRepository.Create(m)
+	if err != nil {
+		logger.Error(err)
+	}
 	return result
 }
 
-func (UserUsecase) Update(m *model.User) *model.User {
-	result, _ := userRepository.Update(m)
+func (UserUsecase) Update(c context.Context, m *model.User) *model.User {
+	logger := app.GetLoggerFromContext(c)
+	result, err := userRepository.Update(m)
+	if err != nil {
+		logger.Error(err)
+	}
 	return result
 }
 
-func (UserUsecase) Delete(m *model.User) *model.User {
-	result, _ := userRepository.Delete(m)
+func (UserUsecase) Delete(c context.Context, m *model.User) *model.User {
+	logger := app.GetLoggerFromContext(c)
+	result, err := userRepository.Delete(m)
+	if err != nil {
+		logger.Error(err)
+	}
 	return result
 }
 

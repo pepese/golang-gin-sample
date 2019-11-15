@@ -1,6 +1,7 @@
 package controller
 
 import (
+	"context"
 	"net/http"
 	"strconv"
 
@@ -27,7 +28,7 @@ func NewGinRouter(e *gin.Engine) {
 		user.GET("", func(c *gin.Context) {
 			m := model.User{}
 			c.Bind(&m)
-			result := userUc.List(&m)
+			result := userUc.List(c.Value("ctx").(context.Context), &m)
 			c.JSON(http.StatusOK, result)
 		})
 		// GET /api/v1/users/:user_id
@@ -36,14 +37,14 @@ func NewGinRouter(e *gin.Engine) {
 			c.Bind(&m)
 			id, _ := strconv.Atoi(c.Params.ByName("user_id"))
 			m.ID = id
-			result := userUc.Get(&m)
+			result := userUc.Get(c.Value("ctx").(context.Context), &m)
 			c.JSON(http.StatusOK, result)
 		})
 		// POST /api/v1/users
 		user.POST("", func(c *gin.Context) {
 			m := model.User{}
 			c.Bind(&m)
-			result := userUc.Create(&m)
+			result := userUc.Create(c.Value("ctx").(context.Context), &m)
 			c.JSON(http.StatusOK, result)
 		})
 		// PUT /api/v1/users/:user_id
@@ -52,7 +53,7 @@ func NewGinRouter(e *gin.Engine) {
 			c.Bind(&m)
 			id, _ := strconv.Atoi(c.Params.ByName("user_id"))
 			m.ID = id
-			result := userUc.Update(&m)
+			result := userUc.Update(c.Value("ctx").(context.Context), &m)
 			c.JSON(http.StatusOK, result)
 		})
 		// DELETE /api/v1/users/:user_id
@@ -61,7 +62,7 @@ func NewGinRouter(e *gin.Engine) {
 			c.Bind(&m)
 			id, _ := strconv.Atoi(c.Params.ByName("user_id"))
 			m.ID = id
-			result := userUc.Delete(&m)
+			result := userUc.Delete(c.Value("ctx").(context.Context), &m)
 			c.JSON(http.StatusOK, result)
 		})
 	}
