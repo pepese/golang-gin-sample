@@ -5,28 +5,36 @@ import (
 	"context"
 	"fmt"
 	"io/ioutil"
+	"sync"
 	"time"
 
 	"github.com/gin-gonic/gin"
 	"github.com/pepese/golang-gin-sample/app"
-	"github.com/pepese/golang-gin-sample/app/interface/controller"
+	"github.com/pepese/golang-gin-sample/app/adapter/controller"
 	uuid "github.com/satori/go.uuid"
 )
 
-var ginServer *gin.Engine
+var (
+	gEn     *gin.Engine
+	gEnOnce sync.Once
+)
 
-func GinServerRun() {
-	RunWithGracefulStop(ginServer)
+type ginServer struct{}
+
+func (hs *ginServer) Run() {
+	NewGinServer()
+	RunWithGracefulStop(gEn)
 }
 
-func NewGinServer() *gin.Engine {
-	e := gin.New()
-	e.Use(accessLogging())
-	e.Use(gin.Recovery())
-	controller.NewGinRouter(e)
-	ginServer = e
-
-	return e
+func NewGinServer() *ginServer {
+	gEnOnce.Do(func() {
+		e := gin.New()
+		e.Use(accessLogging())
+		e.Use(gin.Recovery())
+		r := controller.NewGinRouter(e, nil, nil) // ここで UC を設定する
+		gEn = r.GinRouter()
+	})
+	return &ginServer{}
 }
 
 type responseBodyWriter struct {
@@ -65,8 +73,8 @@ func accessLogging() gin.HandlerFunc {
 		c.Writer.Header().Set("X-Request-Id", reqId)
 
 		// Logger
-		logger := app.GetLoggerWithKeyValue("reqId", reqId)
-		ctx = app.SetLoggerToContext(ctx, logger)
+		logger := app.LoggerWithKeyValue("reqId", reqId)
+		ctx = app.LoggerToContext(ctx, logger)
 		c.Set("ctx", ctx)
 
 		// Access Log

@@ -13,20 +13,20 @@ type testStruct struct {
 func TestLogger(t *testing.T) {
 	ctx := context.Background()
 	t.Run("Logging message", func(t *testing.T) {
-		logger := GetLogger()
+		logger := Logger()
 		logger.Info("hoge")
 	})
 	t.Run("Logging message with reqId", func(t *testing.T) {
-		logger := GetLoggerWithKeyValue("reqId", "aaaaaaaaaa")
+		logger := LoggerWithKeyValue("reqId", "aaaaaaaaaa")
 		logger.Info("fuge")
 	})
 	t.Run("Set/Get logger to context", func(t *testing.T) {
-		ctx = SetLoggerToContext(ctx, GetLoggerWithKeyValue("reqId", "bbbbbbbbbb"))
-		logger := GetLoggerFromContext(ctx)
+		ctx = LoggerToContext(ctx, LoggerWithKeyValue("reqId", "bbbbbbbbbb"))
+		logger := LoggerFromContext(ctx)
 		logger.Info("guhe")
 	})
 	t.Run("Logging struxt message", func(t *testing.T) {
-		logger := GetLogger()
+		logger := Logger()
 		msg := testStruct{param1: "hoge", param2: "huge"}
 		logger.Info(msg)
 	})

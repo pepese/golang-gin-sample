@@ -6,7 +6,7 @@ import (
 	"github.com/kelseyhightower/envconfig"
 )
 
-type Config struct {
+type config struct {
 	AppName     string `envconfig:"APP_NAME" default:"golang-gin-sample"`
 	AppVersion  string `envconfig:"APP_VERSION" default:"undefined"`
 	RdbType     string `envconfig:"RDB_TYPE" default:"mysql"`
@@ -17,17 +17,21 @@ type Config struct {
 	RdbName     string `envconfig:"RDB_NAME" default:"testdb"`
 }
 
-var config *Config
-var once sync.Once
+var (
+	conf  *config
+	cOnce sync.Once
+)
 
-func GetConfig() *Config {
-	InitConfig()
-	return config
+func Config() *config {
+	initConfig()
+	return conf
 }
 
-func InitConfig() {
-	once.Do(func() {
-		config = &Config{}
-		envconfig.Process("", config)
+func initConfig() {
+	cOnce.Do(func() {
+		conf = &config{}
+		if err := envconfig.Process("", conf); err != nil {
+			panic("envconfig error")
+		}
 	})
 }

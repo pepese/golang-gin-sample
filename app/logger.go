@@ -44,14 +44,14 @@ func getDesugaredLogger() *zap.Logger {
 			panic(err)
 		}
 		desugaredLogger = zapLogger.With(
-			zap.String("app", GetConfig().AppName),
-			zap.String("version", GetConfig().AppVersion),
+			zap.String("app", Config().AppName),
+			zap.String("version", Config().AppVersion),
 		)
 	})
 	return desugaredLogger
 }
 
-func GetLogger() *zap.SugaredLogger {
+func Logger() *zap.SugaredLogger {
 	tmpLogger := getDesugaredLogger()
 	loggerOnce.Do(func() {
 		logger = tmpLogger.Sugar()
@@ -59,22 +59,22 @@ func GetLogger() *zap.SugaredLogger {
 	return logger
 }
 
-func GetLoggerFromContext(c context.Context) *zap.SugaredLogger {
+func LoggerFromContext(c context.Context) *zap.SugaredLogger {
 	if c == nil {
-		return GetLogger()
+		return Logger()
 	}
 	if zapLogger, ok := c.Value(loggerKey).(*zap.SugaredLogger); ok {
 		return zapLogger
 	}
-	return GetLogger()
+	return Logger()
 
 }
 
-func SetLoggerToContext(c context.Context, logger *zap.SugaredLogger) context.Context {
+func LoggerToContext(c context.Context, logger *zap.SugaredLogger) context.Context {
 	return context.WithValue(c, loggerKey, logger)
 }
 
-func GetLoggerWithKeyValue(key string, value string) *zap.SugaredLogger {
+func LoggerWithKeyValue(key string, value string) *zap.SugaredLogger {
 	tmpLogger := getDesugaredLogger()
 	tmpLogger = tmpLogger.With(
 		zap.String(key, value),

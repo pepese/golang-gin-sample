@@ -1,17 +1,43 @@
-package gorm
+package usecase
 
 import (
 	"testing"
 
-	"github.com/pepese/golang-gin-sample/app"
+	"github.com/golang/mock/gomock"
+	"github.com/pepese/golang-gin-sample/app/domain/model"
+	"github.com/pepese/golang-gin-sample/app/usecase/mock_usecase"
+	"gopkg.in/go-playground/assert.v1"
+)
+
+func TestUserUsecase(t *testing.T) {
+	ctrl := gomock.NewController(t)
+	defer ctrl.Finish()
+
+	t.Run("List", func(t *testing.T) {
+		m := mock_usecase.NewMockUserRepository(ctrl)
+		in := &model.User{}
+		m.EXPECT().List(in).Return(model.Users{model.User{FirstName: "first", LastName: "last"}}, nil)
+		userUc := &UserUsecase{UserRepo: m}
+		result, _ := userUc.List(nil, in)
+		assert.Equal(t, result, model.Users{model.User{FirstName: "first", LastName: "last"}})
+	})
+}
+
+/*
+import (
+	"testing"
+
 	"github.com/pepese/golang-gin-sample/app/domain/model"
 )
 
 func TestUserRepository(t *testing.T) {
 	var user *model.User
 	var repo = NewUserRepository()
-	app.InitConfig()
-	rdb := Init()
+	gm := Gorm()
+	rdb, err := gm.DB()
+	if err != nil {
+		panic(err.Error())
+	}
 	defer rdb.Close()
 
 	t.Run("Create user", func(t *testing.T) {
@@ -81,4 +107,4 @@ func TestUserRepository(t *testing.T) {
 			t.Fatal("failed test")
 		}
 	})
-}
+}*/

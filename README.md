@@ -21,7 +21,12 @@
 
 ## Docker Compose
 
-アプリをローカル実行する際の
+アプリをローカル実行する際の MySQL を起動する際に使用する。
+
+```zsh
+% docker-compose up -d
+% go run main.go
+```
 
 ## 構成
 

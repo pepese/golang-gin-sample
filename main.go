@@ -2,16 +2,20 @@ package main
 
 import (
 	"github.com/pepese/golang-gin-sample/app"
-	"github.com/pepese/golang-gin-sample/app/infrastructure/datastore/gorm"
+	"github.com/pepese/golang-gin-sample/app/infrastructure/datastore"
 	"github.com/pepese/golang-gin-sample/app/infrastructure/server"
 )
 
 func main() {
-	app.InitConfig()
+	app.Config()
 
-	db := gorm.Init()
+	gm := datastore.Gorm()
+	db, err := gm.DB()
+	if err != nil {
+		panic(err.Error())
+	}
 	defer db.Close()
 
-	server.NewGinServer()
-	server.GinServerRun()
+	srv := server.NewGinServer()
+	srv.Run()
 }

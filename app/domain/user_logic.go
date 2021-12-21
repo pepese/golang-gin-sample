@@ -8,13 +8,13 @@ import (
 UserLogic Interface
 */
 type UserLogic interface {
-	GetFullName() string
+	FullName() string
 }
 
 type userLogic struct {
 	model *model.User
 }
 
-func (d *userLogic) GetFullName() string {
+func (d *userLogic) FullName() string {
 	return d.model.FirstName + " " + d.model.LastName
 }
