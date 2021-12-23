@@ -1,16 +1,16 @@
 version: "3.2"
 services:
-  #mysql:
-  #  image: mysql:5.7.26
-  #  ports:
-  #    - "3306:3306"
-  #  container_name: mysql
-  #  environment:
-  #    - MYSQL_ALLOW_EMPTY_PASSWORD=yes
-  #    - MYSQL_DATABASE=testdb
-  #    - MYSQL_USER=testuser
-  #    - MYSQL_PASSWORD=testpass
-  #    - TZ=Asia/Tokyo
+  # mysql:
+  #   image: mysql:5.7.26
+  #   ports:
+  #     - "3306:3306"
+  #   container_name: mysql
+  #   environment:
+  #     - MYSQL_ALLOW_EMPTY_PASSWORD=yes
+  #     - MYSQL_DATABASE=testdb
+  #     - MYSQL_USER=testuser
+  #     - MYSQL_PASSWORD=testpass
+  #     - TZ=Asia/Tokyo
   postgres:
     image: postgres:13-alpine
     restart: always
@@ -21,3 +21,19 @@ services:
       TZ: Asia/Tokyo
     ports:
       - '5432:5432'
+  # app:
+  #   build:
+  #     context: ./
+  #     dockerfile: ./Dockerfile
+  #   ports:
+  #     - "8080:8080"
+  #   environment:
+  #     RDB_USER: testuser
+  #     RDB_PASSWORD: testpass
+  #     RDB_HOST: postgres
+  #     RDB_PORT: 5432
+  #     RDB_NAME: testdb
+  #     TZ: Asia/Tokyo
+  #   depends_on:
+  #     - "postgres"
+  #   container_name: app
